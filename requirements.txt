@@ -8,3 +8,4 @@ pydub
 python-dotenv
 ffmpeg
 pyaudioop
+sounddevice
