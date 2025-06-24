@@ -11,7 +11,6 @@ try:
     from pydub import AudioSegment
 except ImportError:
     print("⚠️ Pydub not available. Audio features might be limited.")
-from pydub.playback import _play_with_pyaudio
 from deepgram import DeepgramClient, LiveOptions, LiveTranscriptionEvents, SpeakOptions
 import sounddevice as sd
 from queue import Queue
@@ -64,8 +63,11 @@ def deepgram_speak(text: str):
     filename = "tts_response.mp3"
     options = SpeakOptions(model="aura-2-thalia-en")
     deepgram_client.speak.rest.v("1").save(filename, {"text": text}, options)
-    audio_segment = AudioSegment.from_file(filename, format="mp3")
-    _play_with_pyaudio(audio_segment)
+    
+    # Use streamlit audio player instead of _play_with_pyaudio
+    audio_bytes = open(filename, "rb").read()
+    st.audio(audio_bytes, format="audio/mp3")
+
     st.session_state["ai_speaking"] = False
     speaking.clear()
     start_listening()
@@ -73,12 +75,15 @@ def deepgram_speak(text: str):
 def speak_intro_and_start():
     speaking.set()
     st.session_state["ai_speaking"] = True
-    intro_message = "Hello! I'm your medical chatbot. If you need any suggestions, let me know."
+    intro_message = "Hello! I'm Sarah! I'm your medical chatbot. If you need any suggestions, let me know."
     filename = "tts_intro.mp3"
     options = SpeakOptions(model="aura-2-thalia-en")
     deepgram_client.speak.rest.v("1").save(filename, {"text": intro_message}, options)
-    audio_segment = AudioSegment.from_file(filename, format="mp3")
-    _play_with_pyaudio(audio_segment)
+
+    # Stream audio using Streamlit's audio player
+    audio_bytes = open(filename, "rb").read()
+    st.audio(audio_bytes, format="audio/mp3")
+
     st.session_state["ai_speaking"] = False
     speaking.clear()
     start_listening()
