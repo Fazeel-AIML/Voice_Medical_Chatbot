@@ -7,5 +7,4 @@ deepgram-sdk
 pydub
 python-dotenv
 ffmpeg
-pyaudioop
 sounddevice
