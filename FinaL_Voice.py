@@ -7,7 +7,10 @@ from langchain_groq import ChatGroq
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
-from pydub import AudioSegment
+try:
+    from pydub import AudioSegment
+except ImportError:
+    print("⚠️ Pydub not available. Audio features might be limited.")
 from pydub.playback import _play_with_pyaudio
 from deepgram import DeepgramClient, LiveOptions, LiveTranscriptionEvents, SpeakOptions
 import sounddevice as sd
